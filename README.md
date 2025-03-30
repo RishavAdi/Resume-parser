@@ -2,6 +2,27 @@
 
 An intelligent resume parser that automatically extracts structured information from resumes (PDF, DOCX, DOC) using AI. Perfect for recruiters, HR teams, and job seekers!
 
+---
+
+## Video Demonstration
+
+[Demo PDF File]
+
+
+
+https://github.com/user-attachments/assets/c651d2a5-d08e-4fe5-b727-0a9728d3ca02
+
+
+[Demo DOCX File]
+
+https://github.com/user-attachments/assets/e5dc5827-565d-4daa-803d-06dffae42ee0
+
+
+
+
+---
+
+
 ## Features 🚀
 
 * Extracts **name, email, phone, skills, experience, education** and more
