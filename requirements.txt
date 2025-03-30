@@ -1,0 +1,9 @@
+openai
+python-dotenv
+PyPDF2
+python-docx
+python-magic
+streamlit
+textract==1.6.3
+docx2txt
+mammoth
