@@ -1,18 +1,21 @@
 import json
 import re
-from openai import OpenAI, APIError
+import requests
 from typing import Dict, Any, Optional
 from .config import Config
 
 class ResumeParser:
     def __init__(self):
-        try:
-            self.client = OpenAI(api_key=Config.get_api_key())
-            self.model = Config.MODEL_NAME
-            self.max_tokens = Config.MAX_TOKENS
-            self.temperature = Config.TEMPERATURE
-        except ValueError as e:
-            raise RuntimeError(f"OpenAI client initialization failed: {str(e)}")
+        self.api_key = Config.get_api_key()
+        self.model = Config.MODEL_NAME
+        self.max_tokens = Config.MAX_TOKENS
+        self.temperature = Config.TEMPERATURE
+        self.headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "HTTP-Referer": Config.SITE_URL,
+            "X-Title": Config.SITE_NAME,
+            "Content-Type": "application/json"
+        }
 
     def parse_resume(self, text: str) -> Dict[str, Any]:
         """Main method to parse resume text"""
@@ -44,23 +47,35 @@ class ResumeParser:
             }
 
     def _get_ai_response(self, text: str) -> Dict[str, Any]:
-        """Get response from OpenAI API"""
+        """Get response from OpenRouter API"""
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{
-                    "role": "user",
-                    "content": self._create_prompt(text)
-                }],
-                temperature=self.temperature,
-                max_tokens=self.max_tokens,
-                response_format={"type": "json_object"}
+            response = requests.post(
+                url=f"{Config.API_BASE}/chat/completions",
+                headers=self.headers,
+                json={
+                    "model": self.model,
+                    "messages": [{
+                        "role": "user",
+                        "content": self._create_prompt(text)
+                    }],
+                    "temperature": self.temperature,
+                    "max_tokens": self.max_tokens,
+                    "response_format": {"type": "json_object"}
+                }
             )
-            return {"content": response.choices[0].message.content}
-        except APIError as e:
+            
+            if response.status_code == 200:
+                return {"content": response.json()["choices"][0]["message"]["content"]}
+            else:
+                return {
+                    "error": f"OpenRouter API error: Status {response.status_code}",
+                    "details": response.text
+                }
+                
+        except requests.exceptions.RequestException as e:
             return {
-                "error": f"OpenAI API error: {str(e)}",
-                "code": e.code if hasattr(e, 'code') else None
+                "error": f"API request failed: {str(e)}",
+                "code": "request_error"
             }
 
     def _parse_and_validate(self, response: Dict[str, Any], original_text: str) -> Dict[str, Any]:
