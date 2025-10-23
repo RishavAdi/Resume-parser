@@ -1,3 +1,4 @@
+from resume_parser.ppt_generator import ResumeSlideGenerator
 import streamlit as st
 import tempfile
 import os
@@ -177,6 +178,35 @@ def main():
                     # Show raw JSON
                     with st.expander("View Raw JSON Output"):
                         st.json(result)
+
+                    if result and "error" not in result:
+                        st.json(result)
+                        
+                        # Add PowerPoint generation button
+                        if st.button("Generate PowerPoint Slide"):
+                            try:
+                                # Create temporary file
+                                with tempfile.NamedTemporaryFile(delete=False, suffix='.pptx') as tmp:
+                                    temp_path = tmp.name
+                                
+                                # Generate PowerPoint
+                                ppt_generator = ResumeSlideGenerator()
+                                output_path = ppt_generator.generate_slide(result, temp_path)
+                                
+                                # Read the generated file
+                                with open(output_path, "rb") as file:
+                                    btn = st.download_button(
+                                        label="Download PowerPoint",
+                                        data=file,
+                                        file_name="resume_summary.pptx",
+                                        mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                                    )
+                                
+                                # Clean up temp file
+                                os.unlink(output_path)
+                                
+                            except Exception as e:
+                                st.error(f"Failed to generate PowerPoint: {str(e)}")
 
         except Exception as e:
             show_error({

@@ -7,3 +7,4 @@ streamlit
 textract==1.6.3
 docx2txt
 mammoth
+python-pptx>=0.6.21
