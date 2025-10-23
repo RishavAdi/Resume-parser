@@ -1,4 +1,5 @@
 import argparse
+
 import json
 
 from resume_parser.file_reader import FileReader
