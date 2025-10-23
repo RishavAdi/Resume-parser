@@ -1,131 +1,59 @@
-# AI-Powered Resume Parser 📄✨
+# Resume Parser
 
-An intelligent resume parser that automatically extracts structured information from resumes (PDF, DOCX, DOC) using AI. Perfect for recruiters, HR teams, and job seekers!
+A Python-based resume parser using OpenRouter API to extract structured information from resumes.
 
----
+## Features
 
-## Video Demonstration
+- Extracts key information including:
+  - Personal details (name, email, phone)
+  - Work experience
+  - Education
+  - Skills
+  - Projects
+  - Certifications
+- JSON output format
+- Error handling and validation
+- Fallback extraction methods
 
-[Demo PDF File]
-
-
-
-https://github.com/user-attachments/assets/c651d2a5-d08e-4fe5-b727-0a9728d3ca02
-
-
-[Demo DOCX File]
-
-https://github.com/user-attachments/assets/e5dc5827-565d-4daa-803d-06dffae42ee0
-
-
-
-
----
-
-
-## Features 🚀
-
-* Extracts **name, email, phone, skills, experience, education** and more
-* Supports **PDF, DOCX, and DOC** formats
-* Clean **Streamlit web interface**
-* Powered by **OpenAI GPT-4/3.5** for accurate parsing
-* Handles complex resume layouts with **Mammoth & PyPDF2**
-
-## Project Structure 🗂️
-
-```
-resume-parser/
-├── resume_parser/
-│   ├── __init__.py
-│   ├── file_reader.py      # Handles file parsing
-│   ├── chatgpt_parser.py   # AI text extraction
-│   ├── utils.py            # Text cleaning
-│   └── config.py           # API configuration
-│ 
-├── app.py                  # Streamlit UI
-├── requirements.txt        # Dependencies
-├── .env                    # Environment template
-└── README.md
-```
-
-## Installation ⚙️
+## Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/DipankarDandapat/ResumeParser.git
-cd resume-parser
+git clone https://github.com/YOUR_USERNAME/ResumeParser.git
+cd ResumeParser
 ```
 
-2. Install dependencies:
+2. Create virtual environment:
+```bash
+python -m venv .venv
+.\.venv\Scripts\activate
+```
+
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Set up your OpenAI API key:
-```bash
-echo "OPENAI_API_KEY=your_api_key_here" > .env
+4. Create .env file with your OpenRouter API key:
+```
+OPENROUTER_API_KEY=your_api_key_here
 ```
 
-## Usage 🖥️
-
-Run the Streamlit app:
-```bash
-streamlit run app.py
-```
-
-Then upload your resume file (PDF/DOCX/DOC) through the web interface.
-
-## How It Works 🔍
-
-1. Upload a resume file
-2. The system extracts raw text using:
-   * **Mammoth** for DOCX
-   * **PyPDF2** for PDF
-   * **Textract** for DOC
-3. OpenAI GPT processes the text and returns structured JSON
-4. Results are displayed in a clean UI
-
-## Example Output 📋
-
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "+1 (123) 456-7890",
-  "skills": ["Python", "Machine Learning", "SQL"],
-  "experience": [
-    {
-      "company": "Tech Corp",
-      "position": "Senior Developer",
-      "duration": "2020-Present"
-    }
-  ],
-  "education": [
-    {
-      "institution": "State University",
-      "degree": "B.S. Computer Science",
-      "year": "2020"
-    }
-  ]
-}
-```
-
-## Customization 🛠️
-
-To modify what fields are extracted, edit the prompt in `chatgpt_parser.py`:
+## Usage
 
 ```python
-prompt = f"""
-Extract resume details in JSON format:
-{{
-    "name": "Full Name",
-    "email": "email@example.com",
-    "skills": ["Python", "SQL"],
-    "experience": [{{"company": "ABC Corp", "position": "SWE"}}]
-}}
-Resume Text: {text}
-"""
+from resume_parser import ResumeParser
+
+parser = ResumeParser()
+result = parser.parse_resume(resume_text)
+print(result)
 ```
 
+## Requirements
 
+- Python 3.8+
+- See requirements.txt for full list
 
+## License
+
+MIT License
